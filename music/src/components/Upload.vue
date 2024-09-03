@@ -73,7 +73,6 @@ export default {
           newName=data.modified_name;
         }
 
-        console.log(newName)
 
 
         if (!querySnapshot.empty) {
@@ -130,9 +129,8 @@ export default {
               docID: docID
             }
 
-            const songRef = await addDoc(songsCollection, song)
-            console.log(songRef.songs);
-            
+            await addDoc(songsCollection, song)
+
 
             this.$emit('uploadComplete', song)  
 
