@@ -32,6 +32,7 @@
             class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
             placeholder="Enter Song Title"
             name="modified_name"
+            @input="updateUnsavedFlag(true)"
           />
           <ErrorMessage class="text-red-600" name="song_title" />
         </div>
@@ -41,7 +42,8 @@
             type="text"
             class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
             placeholder="Enter Genre"
-            name="genre"
+            name="genre"   
+            @input="updateUnsavedFlag(true)"
           />
           <ErrorMessage class="text-red-600" name="genre" />
         </div>
@@ -69,7 +71,7 @@
 <script>
 import { songsCollection } from '@/includes/firebase'
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
-import { getStorage, ref, deleteObject } from "firebase/storage";
+import { getStorage, ref, deleteObject } from 'firebase/storage'
 
 export default {
   name: 'CompositionItem',
@@ -86,9 +88,12 @@ export default {
       type: Number,
       required: true
     },
-    removeSong:{
+    removeSong: {
       type: Function,
-      required:true
+      required: true
+    },
+    updateUnsavedFlag: {
+      type: Function
     }
   },
   data() {
@@ -106,13 +111,13 @@ export default {
   },
   methods: {
     async deleteSong() {
-      const  storage = getStorage();
-      const songRef=ref(storage, `songs/${this.song.original_name}`);
+      const storage = getStorage()
+      const songRef = ref(storage, `songs/${this.song.original_name}`)
 
       // Delete the file
-      await deleteObject(songRef);
+      await deleteObject(songRef)
       await deleteDoc(doc(songsCollection, this.song.docID))
-      
+
       this.removeSong(this.index)
     },
 
@@ -135,6 +140,7 @@ export default {
       this.alert_msg = 'Song updated successfully'
 
       this.updateSong(this.index, values)
+      this.updateUnsavedFlag(false);
     }
   }
 }

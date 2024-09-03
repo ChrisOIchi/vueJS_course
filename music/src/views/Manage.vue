@@ -3,7 +3,7 @@
   <section class="container mx-auto mt-6">
     <div class="md:grid md:grid-cols-3 md:gap-4">
       <div class="col-span-1">
-        <app-upload ref="upload"/>
+        <app-upload ref="upload" @uploadComplete="addSong" />
       </div>
       <div class="col-span-2">
         <div class="bg-white rounded border border-gray-200 relative flex flex-col">
@@ -19,6 +19,7 @@
               :updateSong="updateSong"
               :index="i"
               :removeSong="removeSong"
+              :updateUnsavedFlag="updateUnsavedFlag"
             />
           </div>
         </div>
@@ -28,7 +29,7 @@
 </template>
 
 <script>
-import useUserStore from '@/stores/user'
+// import useUserStore from '@/stores/user'
 import AppUpload from '@/components/Upload.vue'
 import CompositionItem from '@/components/CompositionItem.vue'
 import { query, where, getDocs } from 'firebase/firestore'
@@ -42,7 +43,8 @@ export default {
   },
   data() {
     return {
-      songs: []
+      songs: [],
+      unsaveFlag: false
     }
   },
   methods: {
@@ -64,23 +66,35 @@ export default {
       this.songs[i].modified_name = values.modified_name
       this.songs[i].genre = values.genre
     },
-    removeSong(i){
-      this.songs.splice(i,1);
+    removeSong(i) {
+      this.songs.splice(i, 1)
     },
-    addSong(){
+    addSong(song) {
 
+      this.songs.push(song)
+    },
+    updateUnsavedFlag(value) {
+      this.unsaveFlag = value
     }
   },
   mounted() {
     this.showSongs()
   },
-  beforeRouteEnter(to, from, next) {
-    const userStore = useUserStore()
-    if (!userStore.userLoggedIn) {
-      next({ name: 'home' })
-    } else {
+  beforeRouteLeave(to, from, next) {
+    if (!this.unsaveFlag) {
       next()
+    } else {
+      const leave = confirm('You have unsaved changes. Are you sure you want to leave?');
+      next(leave);
     }
   }
+  // beforeRouteEnter(to, from, next) {
+  //   const userStore = useUserStore()
+  //   if (!userStore.userLoggedIn) {
+  //     next({ name: 'home' })
+  //   } else {
+  //     next()
+  //   }
+  // }
 }
 </script>
