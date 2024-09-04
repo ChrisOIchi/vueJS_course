@@ -25,6 +25,7 @@ const storage = getStorage(app);
 // Accede a la colección 'users'
 const usersCollection = collection(db, 'users');
 const songsCollection = collection(db, 'songs');
+const commentsCollection = collection(db, 'comments');
 
 // Exporta las referencias para usarlas en otras partes de tu proyecto
-export { db, auth, storage, usersCollection, songsCollection };
+export { db, auth, storage, usersCollection, songsCollection, commentsCollection };
