@@ -99,7 +99,9 @@
         type="checkbox"
         class="w-4 h-4 float-left -ml-6 mt-1 rounded"
       />
-      <label class="inline-block">Accept terms of service</label>
+      <i18n-t class="inline-block" keypath="register.accept" tag="label"
+        ><a href="#">{{ $t("register.tos") }}</a></i18n-t
+      >
     </div>
     <ErrorMessage class="text-red-600" name="tos" />
     <button
@@ -113,9 +115,8 @@
 </template>
 
 <script>
-
-import { mapActions } from 'pinia';
-import  useUserStore  from '@/stores/user';
+import { mapActions } from 'pinia'
+import useUserStore from '@/stores/user'
 export default {
   name: 'RegisterForm',
   data() {
@@ -150,7 +151,7 @@ export default {
   },
   methods: {
     ...mapActions(useUserStore, {
-      createUser: 'register',
+      createUser: 'register'
     }),
     async register(values) {
       this.reg_show_alert = true
@@ -170,8 +171,7 @@ export default {
 
       this.reg_alert_variant = 'bg-green-500'
       this.reg_alert_msg = 'Success! Your account has been created.'
-      window.location.reload();
-      
+      window.location.reload()
     }
   }
 }
